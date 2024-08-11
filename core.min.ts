@@ -71,9 +71,9 @@ export class Core {
     /**
      * @description Sets env variable for this action and future actions in the job
      * @param {string}  name  The name of the variable to set
-     * @param {unknown} val   The value of the variable
+     * @param {any}     val   The value of the variable
      */
-    static exportVariable(name: string, val: unknown): void {
+    static exportVariable(name: string, val: any): void {
         env[name] = this.toCommandValue(val);
         this.issueFileCommand('ENV', this.prepareKeyValueMessage(name, val));
     }
@@ -205,18 +205,18 @@ export class Core {
     /**
      * @description Saves state for current action, the state can only be retrieved by this action's post job execution.
      * @param {string}  name   Name of the state to store
-     * @param {unknown} value  Value to store
+     * @param {any}     value  Value to store
      */
-    static saveState(name: string, value: unknown): void {
+    static saveState(name: string, value: any): void {
         this.issueFileCommand('STATE', this.prepareKeyValueMessage(name, value));
     }
 
     /**
      * @description Sets the name of the output to set.
      * @param {string}  name   Name of the output to set
-     * @param {unknown} value  Value to store
+     * @param {any}     value  Value to store
      */
-    static setOutput(name: string, value: unknown): void {
+    static setOutput(name: string, value: any): void {
         this.issueFileCommand('OUTPUT', this.prepareKeyValueMessage(name, value));
     }
 
@@ -270,7 +270,7 @@ export class Core {
         return this.escapeData(s).replace(/:/g, '%3A').replace(/,/g, '%2C');
     }
 
-    private static toCommandValue(input: unknown): string {
+    private static toCommandValue(input: any): string {
         if (input === null || input === undefined) return '';
         return (typeof input === 'string' || input instanceof String) ? input as string : JSON.stringify(input);
     }
@@ -281,7 +281,7 @@ export class Core {
       return (title === null || title === undefined) ? { title, file, line: startLine, endLine, col: startColumn, endColumn } : {};
     }
 
-    private static prepareKeyValueMessage(key: string, value: unknown): string {
+    private static prepareKeyValueMessage(key: string, value: any): string {
         const delimiter = `ghadelimiter_${randomUUID()}`;
         return `${key}<<${delimiter}${EOL}${this.toCommandValue(value)}${EOL}${delimiter}`;
     }
