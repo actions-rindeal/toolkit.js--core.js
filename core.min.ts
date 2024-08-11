@@ -275,7 +275,7 @@ export class Core {
         return (typeof input === 'string' || input instanceof String) ? input as string : JSON.stringify(input);
     }
 
-    private function toCommandProperties(
+    private static toCommandProperties(
       { title, file, startLine, endLine, startColumn, endColumn }: AnnotationProperties
     ): CommandProperties {
       return (title === null || title === undefined) ? { title, file, line: startLine, endLine, col: startColumn, endColumn } : {};
