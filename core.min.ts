@@ -125,7 +125,7 @@ export class Core {
      * @param {AnnotationProperties} properties  Optional properties for the annotation
      */
     static notice(message: string | Error, properties: AnnotationProperties = {}): void {
-        this.issueCommand('notice', properties, message instanceof Error ? message.toString() : message);
+        this.issueCommand('notice', this.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
 
     /**
@@ -134,7 +134,7 @@ export class Core {
      * @param {AnnotationProperties} properties  Optional properties for the annotation
      */
     static warning(message: string | Error, properties: AnnotationProperties = {}): void {
-        this.issueCommand('warning', properties, message instanceof Error ? message.toString() : message);
+        this.issueCommand('warning', this.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
 
     /**
@@ -143,7 +143,7 @@ export class Core {
      * @param {AnnotationProperties} properties  Optional properties for the annotation
      */
     static error(message: string | Error, properties: AnnotationProperties = {}): void {
-        this.issueCommand('error', properties, message instanceof Error ? message.toString() : message);
+        this.issueCommand('error', this.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
 
     /**
@@ -272,7 +272,13 @@ export class Core {
 
     private static toCommandValue(input: unknown): string {
         if (input === null || input === undefined) return '';
-        return typeof input === 'string' ? input : JSON.stringify(input);
+        return (typeof input === 'string' || input instanceof String) ? input as string : JSON.stringify(input);
+    }
+
+    private function toCommandProperties(
+      { title, file, startLine, endLine, startColumn, endColumn }: AnnotationProperties
+    ): CommandProperties {
+      return (title === null || title === undefined) ? { title, file, line: startLine, endLine, col: startColumn, endColumn } : {};
     }
 
     private static prepareKeyValueMessage(key: string, value: unknown): string {
