@@ -1,8 +1,12 @@
 import { randomUUID } from 'crypto';
 import { appendFileSync, existsSync } from 'fs';
-import { EOL, type } from 'os';
+import { EOL, type, platform, arch, execSync } from 'os';
 import { delimiter, sep } from 'path';
 import { env, stdout, exitCode } from 'process';
+
+////////////////////////
+// @section  Core
+////////////////////////
 
 /**
  * Represents the properties of an annotation.
@@ -281,6 +285,10 @@ function prepareKeyValueMessage(key: string, value: any): string {
     return `${key}<<${delimiter}${EOL}${toCommandValue(value)}${EOL}${delimiter}`;
 }
 
+////////////////////////
+// @section  Summary
+////////////////////////
+
 /**
  * Provides methods to build a summary of the action's results.
  */
@@ -471,4 +479,83 @@ export const summary = new class Summary {
         const element = this.wrap('a', text, { href });
         return this.addRaw(element).addEOL();
     }
+}
+
+////////////////////////
+// @section Platform
+////////////////////////
+
+/** Represents the operating system platform. */
+export const platform = platform();
+
+/** Represents the system architecture. */
+export const arch = arch();
+
+/** Indicates if the platform is Windows. */
+export const isWindows = platform === 'win32';
+
+/** Indicates if the platform is macOS. */
+export const isMacOS = platform === 'darwin';
+
+/** Indicates if the platform is Linux. */
+export const isLinux = platform === 'linux';
+
+/**
+ * Interface representing operating system details.
+ */
+interface OSDetails {
+    /** The name of the operating system. */
+    name: string;
+    /** The version of the operating system. */
+    version: string;
+    /** The platform of the operating system. */
+    platform: string;
+    /** The architecture of the system. */
+    arch: string;
+    /** Indicates if the platform is Windows. */
+    isWindows: boolean;
+    /** Indicates if the platform is macOS. */
+    isMacOS: boolean;
+    /** Indicates if the platform is Linux. */
+    isLinux: boolean;
+}
+
+/**
+ * Executes a command and returns its trimmed output.
+ * @param command - The command to execute.
+ * @returns The trimmed output of the command.
+ */
+function execCommand(command: string): string {
+    return execSync(command, { encoding: 'utf8' }).trim();
+}
+
+/**
+ * Gets the operating system details.
+ * @returns A promise that resolves to an object containing OS details.
+ */
+export async function getDetails(): Promise<OSDetails> {
+    let name: string;
+    let version: string;
+    
+    if (isWindows) {
+        name = execCommand('powershell -command "(Get-CimInstance -ClassName Win32_OperatingSystem).Caption"');
+        version = execCommand('powershell -command "(Get-CimInstance -ClassName Win32_OperatingSystem).Version"');
+    } else if (isMacOS) {
+        const swVers = execCommand('sw_vers');
+        name = swVers.match(/ProductName:\s*(.+)/)?.[1] ?? '';
+        version = swVers.match(/ProductVersion:\s*(.+)/)?.[1] ?? '';
+    } else {
+        const lsbRelease = execCommand('lsb_release -i -r -s');
+        [name, version] = lsbRelease.split('\n');
+    }
+    
+    return {
+        name,
+        version,
+        platform,
+        arch,
+        isWindows,
+        isMacOS,
+        isLinux
+    };
 }
