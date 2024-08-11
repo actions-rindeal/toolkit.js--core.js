@@ -186,7 +186,7 @@ export class Core {
     }
 
     /**
-     * Enables or disables the echoing of commands into stdout for the rest of the step.
+     * @description Enables or disables the echoing of commands into stdout for the rest of the step.
      * @param {boolean} enabled  Whether to enable command echoing
      */
     static setCommandEcho(enabled: boolean): void {
@@ -194,7 +194,7 @@ export class Core {
     }
 
     /**
-     * Gets the value of a state set by this action's main execution.
+     * @description Gets the value of a state set by this action's main execution.
      * @param   {string} name  Name of the state to get
      * @returns {string}       The state value
      */
@@ -203,7 +203,7 @@ export class Core {
     }
 
     /**
-     * Saves state for current action, the state can only be retrieved by this action's post job execution.
+     * @description Saves state for current action, the state can only be retrieved by this action's post job execution.
      * @param {string}  name   Name of the state to store
      * @param {unknown} value  Value to store
      */
@@ -212,7 +212,7 @@ export class Core {
     }
 
     /**
-     * Sets the name of the output to set.
+     * @description Sets the name of the output to set.
      * @param {string}  name   Name of the output to set
      * @param {unknown} value  Value to store
      */
@@ -221,7 +221,7 @@ export class Core {
     }
 
     /**
-     * Converts the given path to the posix form.
+     * @description Converts the given path to the posix form.
      * @param   {string} pth  Path to transform
      * @returns {string}      Posix path
      */
@@ -230,7 +230,7 @@ export class Core {
     }
 
     /**
-     * Converts the given path to the win32 form.
+     * @description Converts the given path to the win32 form.
      * @param   {string} pth  Path to transform
      * @returns {string}      Win32 path
      */
@@ -239,7 +239,7 @@ export class Core {
     }
 
     /**
-     * Converts the given path to a platform-specific path.
+     * @description Converts the given path to a platform-specific path.
      * @param   {string} pth  The path to platformize
      * @returns {string}      The platform-specific path
      */
