@@ -1,6 +1,6 @@
 {
   "name": "@actions-rindeal/core",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Dep-free re-implementation of @actions/core",
   "keywords": [
     "typescript",
@@ -21,15 +21,14 @@
   "main": "dist/core.js",
   "types": "core.d.ts",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "dev": "ncc run core.ts",
+    "build": "ncc build core.ts -o dist",
     "test": "jest"
   },
   "devDependencies": {
-    "@types/node": "^20.7.13",
-    "jest": "^28.4.3",
-    "typescript": "^4.5.4",
-    "webpack": "^5.64.4",
-    "webpack-cli": "^4.9.1",
-    "ts-loader": "^9.2.6"
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "@vercel/ncc": "latest",
+    "jest": "^29.0.0"
   }
 }
